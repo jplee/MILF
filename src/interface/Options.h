@@ -89,7 +89,7 @@ enum interfaceOptions
 	OPTION_DEFAULT_KIOSKMODE,
 	OPTION_DEFAULT_DISABLEUPDATECHECK,
 
-	// LAFZ option to bypass prompt to upload edited files
+	// MILF option to bypass prompt to upload edited files
 	OPTION_EDIT_BYPASS_PROMPT,
 
 	// Has to be last element

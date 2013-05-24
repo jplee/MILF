@@ -101,7 +101,7 @@ bool CTlsSocket::Init()
 
 	if (!InitSession())
 		return false;
-	
+
 	m_shutdown_requested = false;
 
 	// At this point, we can start shaking hands.
@@ -530,10 +530,12 @@ int CTlsSocket::ContinueHandshake()
 		if (ResumedSession())
 			m_pOwner->LogMessage(Debug_Info, _T("TLS Session resumed"));
 
-		const wxString& cipherName = GetCipherName();
-		const wxString& macName = GetMacName();
+		const wxString protocol = GetProtocolName();
+		const wxString keyExchange = GetKeyExchange();
+		const wxString cipherName = GetCipherName();
+		const wxString macName = GetMacName();
 
-		m_pOwner->LogMessage(Debug_Info, _T("Cipher: %s, MAC: %s"), cipherName.c_str(), macName.c_str());
+		m_pOwner->LogMessage(Debug_Info, _T("Protocol: %s, Key exchange: %s, Cipher: %s, MAC: %s"), protocol.c_str(), keyExchange.c_str(), cipherName.c_str(), macName.c_str());
 
 		res = VerifyCertificate();
 		if (res != FZ_REPLY_OK)
@@ -781,8 +783,17 @@ void CTlsSocket::Failure(int code, int socket_error, const wxString& function)
 	if (code)
 	{
 		LogError(code, function);
-		if (code == GNUTLS_E_UNEXPECTED_PACKET_LENGTH && m_socket_eof)
-			m_pOwner->LogMessage(Status, _("Server did not properly shut down TLS connection"));
+		if (m_socket_eof)
+		{
+			if (code == GNUTLS_E_UNEXPECTED_PACKET_LENGTH
+#ifdef GNUTLS_E_PREMATURE_TERMINATION
+				|| code == GNUTLS_E_PREMATURE_TERMINATION
+#endif
+				)
+			{
+				m_pOwner->LogMessage(Status, _("Server did not properly shut down TLS connection"));
+			}
+		}
 	}
 	Uninit();
 
@@ -1115,6 +1126,8 @@ int CTlsSocket::VerifyCertificate()
 	CCertificateNotification *pNotification = new CCertificateNotification(
 		m_pOwner->GetCurrentServer()->GetHost(),
 		m_pOwner->GetCurrentServer()->GetPort(),
+		GetProtocolName(),
+		GetKeyExchange(),
 		GetCipherName(),
 		GetMacName(),
 		certificates);
@@ -1130,13 +1143,35 @@ void CTlsSocket::OnRateAvailable(enum CRateLimiter::rate_direction direction)
 {
 }
 
+wxString CTlsSocket::GetProtocolName()
+{
+	wxString protocol = _("unknown");
+
+	const char* s = gnutls_protocol_get_name( gnutls_protocol_get_version( m_session ) );
+	if (s && *s)
+		protocol = wxString(s, wxConvUTF8);
+
+	return protocol;
+}
+
+wxString CTlsSocket::GetKeyExchange()
+{
+	wxString keyExchange = _("unknown");
+
+	const char* s = gnutls_kx_get_name( gnutls_kx_get( m_session ) );
+	if (s && *s)
+		keyExchange = wxString(s, wxConvUTF8);
+
+	return keyExchange;
+}
+
 wxString CTlsSocket::GetCipherName()
 {
 	const char* cipher = gnutls_cipher_get_name(gnutls_cipher_get(m_session));
 	if (cipher && *cipher)
 		return wxString(cipher, wxConvUTF8);
 	else
-		return _T("unknown");
+		return _("unknown");
 }
 
 wxString CTlsSocket::GetMacName()
@@ -1175,8 +1210,8 @@ wxString CTlsSocket::ListTlsCiphers(wxString priority)
 	wxString list = wxString::Format(_T("Ciphers for %s:\n"), priority.c_str());
 
 #if GNUTLS_VERSION_NUMBER >= 0x030009
-    gnutls_priority_t pcache;
-    const char *err = 0;
+	gnutls_priority_t pcache;
+	const char *err = 0;
 	int ret = gnutls_priority_init(&pcache, priority.mb_str(), &err);
 	if (ret < 0)
 	{
@@ -1193,7 +1228,7 @@ wxString CTlsSocket::ListTlsCiphers(wxString priority)
 				break;
 			if (ret == GNUTLS_E_UNKNOWN_CIPHER_SUITE)
 				continue;
-            
+
 			gnutls_protocol_t version;
 			unsigned char id[2];
 			const char* name = gnutls_cipher_suite_info(idx, id, NULL, NULL, NULL, &version);

@@ -8,7 +8,7 @@
 #include "local_filesys.h"
 
 // Defined in optionspage_edit.cpp
-bool UnquoteCommand(wxString& command, wxString& arguments);
+bool UnquoteCommand(wxString& command, wxString& arguments, bool is_dde = false);
 bool ProgramExists(const wxString& editor);
 
 class CChangedFileDialog : public wxDialogEx
@@ -204,9 +204,9 @@ void CEditHandler::Release()
 		if (m_lockfile_descriptor >= 0)
 			close(m_lockfile_descriptor);
 #endif
-		
+
 		wxRemoveFile(m_localDir + _T("empty_file_yq744zm"));
-		
+
 		RemoveAll(true);
 		wxRmdir(m_localDir);
 	}
@@ -678,7 +678,6 @@ checkmodifications_loopbegin:
 			}
 
 			bool remove;
-
 			int res;
 
 			if (COptions::Get()->GetOptionVal(OPTION_EDIT_BYPASS_PROMPT) == 0)
@@ -820,7 +819,7 @@ bool CEditHandler::UploadFile(enum fileType type, std::list<t_fileData>::iterato
 		return false;
 	}
 
-	m_pQueue->QueueFile(false, false, file, iter->name, localPath, iter->remotePath, iter->server, wxLongLong(size.GetHi(), size.GetLo()), type);
+	m_pQueue->QueueFile(false, false, file, iter->name, localPath, iter->remotePath, iter->server, wxLongLong(size.GetHi(), size.GetLo()), type, priority_high);
 	m_pQueue->QueueFile_Finish(true);
 
 	return true;
@@ -848,7 +847,7 @@ void CEditHandler::SetTimerState()
 			m_timer.Stop();
 	}
 	else if (editing)
-		m_timer.Start(250);
+		m_timer.Start(1500);
 }
 
 wxString CEditHandler::CanOpen(enum CEditHandler::fileType type, const wxString& fileName, bool &dangerous, bool &program_exists)
@@ -992,6 +991,8 @@ wxString CEditHandler::GetSystemOpenCommand(wxString file, bool &program_exists)
 		program_exists = false;
 
 		wxString editor;
+		bool is_dde = false;
+#ifdef __WXMSW__
 		if (cmd.Left(7) == _T("WX_DDE#"))
 		{
 			// See wxWidget's wxExecute in src/msw/utilsexc.cpp
@@ -1001,12 +1002,16 @@ wxString CEditHandler::GetSystemOpenCommand(wxString file, bool &program_exists)
 			if (pos < 1)
 				return cmd;
 			editor = editor.Left(pos);
+			is_dde = true;
 		}
 		else
+#endif
+		{
 			editor = cmd;
+		}
 
 		wxString args;
-		if (!UnquoteCommand(editor, args) || editor.empty())
+		if (!UnquoteCommand(editor, args, is_dde) || editor.empty())
 			return cmd;
 
 		if (!PathExpand(editor))

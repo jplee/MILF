@@ -249,7 +249,7 @@ test_SOURCES = test.cpp \
 test_CPPFLAGS = $(WX_CPPFLAGS)
 test_CXXFLAGS = $(WX_CXXFLAGS_ONLY) $(CPPUNIT_CFLAGS)
 test_LDFLAGS = $(CPPUNIT_LIBS) ../src/engine/libengine.a \
-	$(LIBGNUTLS_LIBS) $(WX_LIBS) $(IDN_LIB)
+	$(LIBGNUTLS_LIBS) $(WX_LIBS) $(IDN_LIB) $(LIBSQLITE3_LIBS)
 test_DEPENDENCIES = ../src/engine/libengine.a
 all: all-am
 

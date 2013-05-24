@@ -186,6 +186,26 @@
                       </object>
                       <object class="sizeritem">
                         <object class="wxStaticText">
+                          <label>Protocol:</label>
+                        </object>
+                      </object>
+                      <object class="sizeritem">
+                        <object class="wxStaticText" name="ID_PROTOCOL">
+                          <label>&lt;protocol&gt;</label>
+                        </object>
+                      </object>
+                      <object class="sizeritem">
+                        <object class="wxStaticText">
+                          <label>Key exchange:</label>
+                        </object>
+                      </object>
+                      <object class="sizeritem">
+                        <object class="wxStaticText" name="ID_KEYEXCHANGE">
+                          <label>&lt;key exchange&gt;</label>
+                        </object>
+                      </object>
+                      <object class="sizeritem">
+                        <object class="wxStaticText">
                           <label>Cipher:</label>
                         </object>
                       </object>
@@ -435,6 +455,26 @@
                       <object class="sizeritem">
                         <object class="wxStaticText" name="ID_HOST">
                           <label>&lt;Host:port&gt;</label>
+                        </object>
+                      </object>
+                      <object class="sizeritem">
+                        <object class="wxStaticText">
+                          <label>Protocol:</label>
+                        </object>
+                      </object>
+                      <object class="sizeritem">
+                        <object class="wxStaticText" name="ID_PROTOCOL">
+                          <label>&lt;protocol&gt;</label>
+                        </object>
+                      </object>
+                      <object class="sizeritem">
+                        <object class="wxStaticText">
+                          <label>Key exchange:</label>
+                        </object>
+                      </object>
+                      <object class="sizeritem">
+                        <object class="wxStaticText" name="ID_KEYEXCHANGE">
+                          <label>&lt;key exchange&gt;</label>
                         </object>
                       </object>
                       <object class="sizeritem">
@@ -804,7 +844,7 @@
                   </object>
                   <object class="sizeritem">
                     <object class="wxButton" name="ID_COPY">
-                      <label>Cop&amp;y</label>
+                      <label>Dupl&amp;icate</label>
                     </object>
                     <flag>wxGROW</flag>
                   </object>
@@ -1734,7 +1774,7 @@
               </object>
               <object class="sizeritem">
                 <object class="wxStaticText" name="ID_COPYRIGHT">
-                  <label>&lt;Copyright 2004-2010&gt;</label>
+                  <label>&lt;Copyright 2004-2013&gt;</label>
                 </object>
                 <flag>wxTOP|wxBOTTOM</flag>
                 <border>5</border>
@@ -2377,7 +2417,7 @@
                   </object>
                   <object class="sizeritem">
                     <object class="wxButton" name="ID_COPY">
-                      <label>&amp;Copy</label>
+                      <label>D&amp;uplicate</label>
                     </object>
                     <flag>wxGROW</flag>
                   </object>
@@ -4151,7 +4191,7 @@
                   </object>
                   <object class="sizeritem">
                     <object class="wxButton" name="ID_COPY">
-                      <label>Cop&amp;y</label>
+                      <label>D&amp;uplicate</label>
                     </object>
                     <flag>wxGROW</flag>
                   </object>

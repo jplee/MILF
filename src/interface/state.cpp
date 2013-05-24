@@ -307,6 +307,22 @@ bool CState::SetLocalDir(const wxString& dir, wxString *error /*=0*/)
 		}
 	}
 
+	if (p == m_localDir.GetParent())
+	{
+#ifdef __WXMSW__
+		if (p.GetPath() == _T("\\"))
+		{
+			m_previouslyVisitedLocalSubdir = m_localDir.GetPath();
+			m_previouslyVisitedLocalSubdir.RemoveLast();
+		}
+		else
+#endif
+			m_previouslyVisitedLocalSubdir = m_localDir.GetLastSegment();
+	}
+	else
+		m_previouslyVisitedLocalSubdir = _T("");
+
+
 	m_localDir = p;
 
 	COptions::Get()->SetOption(OPTION_LASTLOCALDIR, m_localDir.GetPath());
@@ -329,10 +345,17 @@ bool CState::SetRemoteDir(const CDirectoryListing *pDirectoryListing, bool modif
 			m_pDirectoryListing = 0;
 			NotifyHandlers(STATECHANGE_REMOTE_DIR);
 		}
+		m_previouslyVisitedRemoteSubdir = _T("");
 		return true;
 	}
 
 	wxASSERT(pDirectoryListing->m_firstListTime.IsValid());
+
+	if (pDirectoryListing && m_pDirectoryListing &&
+		pDirectoryListing->path == m_pDirectoryListing->path.GetParent())
+		m_previouslyVisitedRemoteSubdir = m_pDirectoryListing->path.GetLastSegment();
+	else
+		m_previouslyVisitedRemoteSubdir = _T("");
 
 	if (modified)
 	{
@@ -771,6 +794,7 @@ void CState::HandleDroppedFiles(const wxFileDataObject* pFileDataObject, const C
 	delete [] to;
 	delete [] from;
 #else
+	wxString error;
 	for (unsigned int i = 0; i < files.Count(); i++)
 	{
 		const wxString& file(files[i]);
@@ -784,24 +808,38 @@ void CState::HandleDroppedFiles(const wxFileDataObject* pFileDataObject, const C
 			CLocalPath sourcePath(file, &name);
 			if (name.empty())
 				continue;
+			wxString target = path.GetPath() + name;
+			if (file == target)
+				continue;
+
 			if (copy)
-				wxCopyFile(file, path.GetPath() + name);
+				wxCopyFile(file, target);
 			else
-				wxRenameFile(file, path.GetPath() + name);
+				wxRenameFile(file, target);
 		}
 		else if (type == CLocalFileSystem::dir)
 		{
+			CLocalPath sourcePath(file);
+			if (sourcePath == path || sourcePath.GetParent() == path)
+				continue;
+			if (sourcePath.IsParentOf(path))
+			{
+				error = _("A directory cannot be dragged into one of its subdirectories.");
+				continue;
+			}
+
 			if (copy)
-				RecursiveCopy(CLocalPath(file), path);
+				RecursiveCopy(sourcePath, path);
 			else
 			{
-				CLocalPath sourcePath(file);
 				if (!sourcePath.HasParent())
 					continue;
 				wxRenameFile(file, path.GetPath() + sourcePath.GetLastSegment());
 			}
 		}
 	}
+	if (!error.IsEmpty())
+		wxMessageBox(error, _("Could not complete operation"));
 #endif
 
 	RefreshLocal();
@@ -932,7 +970,10 @@ wxString CState::GetAsURL(const wxString& dir)
 {
 	// Cheap URL encode
 	wxString encoded;
-	const wxWX2MBbuf utf8 = dir.mb_str();
+	const wxWX2MBbuf utf8 = dir.mb_str(wxConvUTF8);
+
+	if (!utf8)
+		return wxEmptyString;
 
 	const char* p = utf8;
 	while (*p)
@@ -982,8 +1023,31 @@ wxString CState::GetAsURL(const wxString& dir)
 	else
 		encoded = _T("/") + encoded;
 #endif
-
 	return _T("file://") + encoded;
+}
+
+bool CState::OpenInFileManager(const wxString& dir)
+{
+	bool ret = false;
+#ifdef __WXMSW__
+	// Unfortunately under Windows, UTF-8 encoded file:// URLs don't work, so use native paths.
+	// Unfortunatelier, we cannot use this for UNC paths, have to use file:// here
+	// Unfortunateliest, we again have a problem with UTF-8 characters which we cannot fix...
+	if (dir.Left(2) != _T("\\\\") && dir != _T("/"))
+		ret = wxLaunchDefaultBrowser(dir);
+	else
+#endif
+	{
+		wxString url = GetAsURL(dir);
+		if (!url.IsEmpty())
+			ret = wxLaunchDefaultBrowser(url);
+	}
+
+
+	if (!ret)
+		wxBell();
+
+	return ret;
 }
 
 void CState::ListingFailed(int error)

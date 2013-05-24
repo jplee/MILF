@@ -73,6 +73,7 @@ BEGIN_EVENT_TABLE(CMainFrame, wxFrame)
 	EVT_SIZE(CMainFrame::OnSize)
 	EVT_MENU(wxID_ANY, CMainFrame::OnMenuHandler)
 	EVT_FZ_NOTIFICATION(wxID_ANY, CMainFrame::OnEngineEvent)
+	EVT_COMMAND(wxID_ANY, fzEVT_UPDATE_LED_TOOLTIP, CMainFrame::OnUpdateLedTooltip)
 	EVT_TOOL(XRCID("ID_TOOLBAR_DISCONNECT"), CMainFrame::OnDisconnect)
 	EVT_MENU(XRCID("ID_MENU_SERVER_DISCONNECT"), CMainFrame::OnDisconnect)
 	EVT_TOOL(XRCID("ID_TOOLBAR_CANCEL"), CMainFrame::OnCancel)
@@ -208,6 +209,7 @@ protected:
 CMainFrame::CMainFrame()
 	: m_comparisonToggleAcceleratorId(wxNewId())
 {
+	wxGetApp().AddStartupProfileRecord(_T("CMainFrame::CMainFrame"));
 	wxRect screen_size = CWindowStateManager::GetScreenDimensions();
 
 	wxSize initial_size;
@@ -502,6 +504,7 @@ void CMainFrame::OnSize(wxSizeEvent &event)
 
 bool CMainFrame::CreateMenus()
 {
+	wxGetApp().AddStartupProfileRecord(_T("CMainFrame::CreateMenus"));
 	if (m_pMenuBar)
 	{
 		SetMenuBar(0);
@@ -523,6 +526,7 @@ bool CMainFrame::CreateMenus()
 
 bool CMainFrame::CreateQuickconnectBar()
 {
+	wxGetApp().AddStartupProfileRecord(_T("CMainFrame::CreateQuickconnectBar"));
 	delete m_pQuickconnectBar;
 
 	m_pQuickconnectBar = new CQuickconnectBar();
@@ -1050,8 +1054,32 @@ void CMainFrame::OnEngineEvent(wxEvent &event)
 	}
 }
 
+void CMainFrame::OnUpdateLedTooltip(wxCommandEvent& event)
+{
+	wxString tooltipText;
+
+	wxFileOffset downloadSpeed = m_pQueueView->GetCurrentDownloadSpeed();
+	wxFileOffset uploadSpeed = m_pQueueView->GetCurrentUploadSpeed();
+
+	CSizeFormat::_format format = static_cast<CSizeFormat::_format>(COptions::Get()->GetOptionVal(OPTION_SIZE_FORMAT));
+	if (format == CSizeFormat::bytes)
+		format = CSizeFormat::iec;
+
+	const wxString downloadSpeedStr = CSizeFormat::Format(downloadSpeed, true, format,
+														  COptions::Get()->GetOptionVal(OPTION_SIZE_USETHOUSANDSEP) != 0,
+														  COptions::Get()->GetOptionVal(OPTION_SIZE_DECIMALPLACES));
+	const wxString uploadSpeedStr = CSizeFormat::Format(uploadSpeed, true, format,
+														COptions::Get()->GetOptionVal(OPTION_SIZE_USETHOUSANDSEP) != 0,
+														COptions::Get()->GetOptionVal(OPTION_SIZE_DECIMALPLACES));
+	tooltipText.Printf(_("Download speed: %s/s\nUpload speed: %s/s"), downloadSpeedStr.c_str(), uploadSpeedStr.c_str());
+
+	m_pActivityLed[0]->SetToolTip(tooltipText);
+	m_pActivityLed[1]->SetToolTip(tooltipText);
+}
+
 bool CMainFrame::CreateToolBar()
 {
+	wxGetApp().AddStartupProfileRecord(_T("CMainFrame::CreateToolBar"));
 	if (m_pToolBar)
 	{
 #ifdef __WXMAC__
@@ -2583,7 +2611,7 @@ WXLRESULT CMainFrame::MSWWindowProc(WXUINT nMsg, WXWPARAM wParam, WXLPARAM lPara
 		// get the new display layout from Windows.
 		//
 		// Note: Both the factory pattern as well as the dynamic object system
-		//       are perfect example of bad design.
+		//	   are perfect example of bad design.
 		//
 		wxModule* pDisplayModule = (wxModule*)wxCreateDynamicObject(_T("wxDisplayModule"));
 		if (pDisplayModule)

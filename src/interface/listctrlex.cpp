@@ -9,7 +9,7 @@
 #include "commctrl.h"
 
 #ifndef HDF_SORTUP
-#define HDF_SORTUP			  0x0400
+#define HDF_SORTUP				0x0400
 #endif
 #ifndef HDF_SORTDOWN
 #define HDF_SORTDOWN			0x0200
@@ -71,7 +71,7 @@ wxListCtrlEx::~wxListCtrlEx()
 }
 
 #ifndef __WXMSW__
-wxScrolledWindow* wxListCtrlEx::GetMainWindow()
+wxScrolledWindow* wxListCtrlEx::GetMainWindow() const
 {
 #ifdef __WXMAC__
 	return (wxScrolledWindow*)m_genericImpl->m_mainWin;
@@ -1162,6 +1162,25 @@ bool wxListCtrlEx::HasSelection() const
 }
 
 
+wxRect wxListCtrlEx::GetListRect() const
+{
+#ifdef __WXMSW__
+	wxRect windowRect = GetClientRect();
+	{
+		wxRect topRect;
+		if (GetItemRect(0, topRect))
+		{
+			windowRect.height -= topRect.y;
+			windowRect.y += topRect.y;
+		}
+	}
+#else
+	wxRect windowRect = GetMainWindow()->GetClientRect();
+#endif
+
+	return windowRect;
+}
+
 
 CListCtrlDropTarget::CListCtrlDropTarget(wxListCtrlEx* pListCtrl)
 	: m_pListCtrl(pListCtrl)
@@ -1219,14 +1238,15 @@ bool CListCtrlDropTarget::IsTopScroll(wxPoint p) const
 	if (!m_pListCtrl->GetItemRect(m_pListCtrl->GetTopItem(), itemRect))
 		return false;
 
+	wxRect windowRect = m_pListCtrl->GetListRect();
+
+	if (itemRect.GetHeight() > windowRect.GetHeight() / 4 ) {
+		itemRect.SetHeight( wxMax( windowRect.GetHeight() / 4, 8 ) );
+	}
+
 	if (p.y < 0 || p.y >= itemRect.GetBottom())
 		return false;
 
-#ifdef __WXMSW__
-	wxRect windowRect = m_pListCtrl->GetClientRect();
-#else
-	wxRect windowRect = m_pListCtrl->GetMainWindow()->GetClientRect();
-#endif
 	if (p.x < 0 || p.x > windowRect.GetWidth())
 		return false;
 
@@ -1245,11 +1265,11 @@ bool CListCtrlDropTarget::IsBottomScroll(wxPoint p) const
 	if (!m_pListCtrl->GetItemRect(0, itemRect))
 		return false;
 
-#ifdef __WXMSW__
-	wxRect windowRect = m_pListCtrl->GetClientRect();
-#else
-	wxRect windowRect = m_pListCtrl->GetMainWindow()->GetClientRect();
-#endif
+	wxRect windowRect = m_pListCtrl->GetListRect();
+	if (itemRect.GetHeight() > windowRect.GetHeight() / 4 ) {
+		itemRect.SetHeight( wxMax( windowRect.GetHeight() / 4, 8 ) );
+	}
+
 	if (p.y > windowRect.GetBottom() || p.y < windowRect.GetBottom() - itemRect.GetHeight())
 		return false;
 
@@ -1279,7 +1299,7 @@ void CListCtrlDropTarget::OnTimer(wxTimerEvent& /*event*/)
 		int top = m_pListCtrl->GetTopItem();
 		m_pListCtrl->EnsureVisible(top - 1);
 	}
-	else if(IsBottomScroll(p))
+	else if (IsBottomScroll(p))
 	{
 		int top = m_pListCtrl->GetTopItem();
 		m_pListCtrl->EnsureVisible(top + m_pListCtrl->GetCountPerPage());

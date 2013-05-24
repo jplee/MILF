@@ -110,7 +110,9 @@ public:
 				{
 					CServerPath dir = m_pRemoteDataObject->GetServerPath();
 					dir.AddSegment(info.name);
-					if (dir == path || dir.IsParentOf(path, false))
+					if (dir == path)
+						return wxDragNone;
+					else if (dir.IsParentOf(path, false))
 					{
 						wxMessageBox(_("A directory cannot be dragged into one of its subdirectories."));
 						return wxDragNone;
@@ -247,12 +249,12 @@ CRemoteTreeView::CRemoteTreeView(wxWindow* parent, wxWindowID id, CState* pState
 	pState->RegisterHandler(this, STATECHANGE_REMOTE_DIR_MODIFIED);
 	pState->RegisterHandler(this, STATECHANGE_APPLYFILTER);
 
+	CreateImageList();
+
 	m_busy = false;
 	m_pQueue = pQueue;
 	AddRoot(_T(""));
 	m_ExpandAfterList = wxTreeItemId();
-
-	CreateImageList();
 
 	SetDropTarget(new CRemoteTreeViewDropTarget(this));
 

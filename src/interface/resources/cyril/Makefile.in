@@ -652,7 +652,7 @@ uninstall-am: uninstall-dist_resourcesDATA
 @MACAPPBUNDLE_TRUE@mac-copy-resources: $(dist_resources_DATA)
 @MACAPPBUNDLE_TRUE@	mkdir -p "$(top_builddir)/FileZilla.app/Contents/SharedSupport/resources/cyril"
 @MACAPPBUNDLE_TRUE@	for i in $(dist_resources_DATA); do \
-@MACAPPBUNDLE_TRUE@	  cp -f "$(srcdir)/$$i" "$(top_builddir)/FileZilla.app/Contents/SharedSupport/resources/cyril"; \
+@MACAPPBUNDLE_TRUE@		cp -f "$(srcdir)/$$i" "$(top_builddir)/FileZilla.app/Contents/SharedSupport/resources/cyril"; \
 @MACAPPBUNDLE_TRUE@	done
 
 @MACAPPBUNDLE_TRUE@	$(MAKE) -C 16x16 mac-copy-resources

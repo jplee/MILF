@@ -101,6 +101,9 @@ public:
 	CLocalPath GetLocalDir() const;
 	bool SetLocalDir(const wxString& dir, wxString *error = 0);
 
+	// Opens specified directory in local file manager, e.g. Explorer on Windows
+	static bool OpenInFileManager(const wxString& dir);
+	
 	// Returns a file:// URL
 	static wxString GetAsURL(const wxString& dir);
 
@@ -163,6 +166,12 @@ public:
 	bool GetSecurityInfo(CSftpEncryptionNotification *& pInfo);
 	void SetSecurityInfo(CCertificateNotification const& info);
 	void SetSecurityInfo(CSftpEncryptionNotification const& info);
+
+	// If the previously selected directory was a direct child of the current directory, this
+	// returns the relative name of the subdirectory.
+	wxString GetPreviouslyVisitedLocalSubdir() const { return m_previouslyVisitedLocalSubdir; }
+	wxString GetPreviouslyVisitedRemoteSubdir() const { return m_previouslyVisitedRemoteSubdir; }
+
 protected:
 	void SetServer(const CServer* server);
 
@@ -203,6 +212,9 @@ protected:
 
 	CCertificateNotification* m_pCertificate;
 	CSftpEncryptionNotification* m_pSftpEncryptionInfo;
+
+	wxString m_previouslyVisitedLocalSubdir;
+	wxString m_previouslyVisitedRemoteSubdir;
 };
 
 class CStateEventHandler

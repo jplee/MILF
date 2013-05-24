@@ -51,11 +51,13 @@ CServer::CServer()
 	Initialize();
 }
 
-bool CServer::ParseUrl(wxString host, const wxString& port, wxString user, wxString pass, wxString &error, CServerPath &path)
+bool CServer::ParseUrl(wxString host, wxString port, wxString user, wxString pass, wxString &error, CServerPath &path)
 {
 	unsigned long nPort = 0;
 	if (!port.empty())
 	{
+		port.Trim(false);
+		port.Trim(true);
 		if (port.size() > 5 || !port.ToULong(&nPort) || !nPort || nPort > 65535)
 		{
 			error = _("Invalid port given. The port has to be a value from 1 to 65535.");
@@ -88,7 +90,7 @@ bool CServer::ParseUrl(wxString host, unsigned int port, wxString user, wxString
 		if (m_protocol == UNKNOWN)
 		{
 			// TODO: http:// once WebDAV is officially supported
-			error = _("Invalid protocol specified. Valid protocols are:\nftp:// for normal FTP,\nsftp:// for SSH file transfer protocol,\nftps:// for FTP over SSL (implicit) and\nftpes:// for FTP over SSL (explicit).");
+			error = _("Invalid protocol specified. Valid protocols are:\nftp:// for normal FTP,\nsftp:// for SSH file transfer protocol,\nftps:// for FTP over TLS (implicit) and\nftpes:// for FTP over TLS (explicit).");
 			return false;
 		}
 	}

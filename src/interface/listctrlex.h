@@ -50,10 +50,13 @@ public:
 	void SetLabelEditBlock(bool block);
 
 #ifndef __WXMSW__
-	wxScrolledWindow* GetMainWindow();
+	wxScrolledWindow* GetMainWindow() const;
 #endif
 
 	bool HasSelection() const;
+
+	// Returns the true rect of the area containing the actual list items
+	wxRect GetListRect() const;
 
 protected:
 	virtual void OnPostScroll();
