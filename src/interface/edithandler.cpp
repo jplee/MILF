@@ -847,7 +847,7 @@ void CEditHandler::SetTimerState()
 			m_timer.Stop();
 	}
 	else if (editing)
-		m_timer.Start(15000);
+		m_timer.Start(1500);
 }
 
 wxString CEditHandler::CanOpen(enum CEditHandler::fileType type, const wxString& fileName, bool &dangerous, bool &program_exists)
