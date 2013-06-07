@@ -678,10 +678,8 @@ checkmodifications_loopbegin:
 			}
 
 			bool remove;
-			int res;
 
             int res;
- 
             if (COptions::Get()->GetOptionVal(OPTION_EDIT_BYPASS_PROMPT) == 0)
                 res = DisplayChangeNotification(CEditHandler::fileType(i), iter, remove);
             else
