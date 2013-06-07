@@ -7,8 +7,13 @@ Legend:
 
   Platform prefixes:
     MSW: Microsoft Windows
-    *nix: Unix (e.g BSD) and Unix-like systems (e.g. Linux)
+    *nix: Unix and Unix-like systems (e.g., GNU/Linux)
     OS X: Apple Mac OS X
+
+3.7.0.2 (2013-05-26)
+
+- Fix freeze if trying to transfer files with multiple servers each with a connection limit of 1
+- Adjust accepted X.509 signature algorithms in TLS 1.2 mode
 
 3.7.0.1 (2013-05-10)
 
@@ -136,7 +141,7 @@ Legend:
 
 + The transfer queue is now stored in an SQLite database. This greatly improves performance and vastly reduces memory consumption while loading/saving the queue
 + Additional improvements to general queue performance and memory consumption
-+ The provided Linux binaries are now compiled for Debian Squeeze instead of Lenny
++ The provided GNU/Linux binaries are now compiled for Debian Squeeze instead of Lenny
 - Fixed crash during shutdown of FileZilla
 - Clearing the queue when it was not yet fully populated no longer causes a crash
 - If using ask login type for a site and no username is given, the initial focus is now on the user box in the login dialog
@@ -489,7 +494,7 @@ Legend:
 + MSW and *nix: Add option to minimize to tray
 + The URLs of selected remote files and directories can be copied to clipboard
 - Further queue performance improvements
-- *nix: Provided Linux binaries now linked against Debian Lenny instead of Etch
+- *nix: Provided GNU/Linux binaries now linked against Debian Lenny instead of Etch
 - Fix visual problems caused by too long URLs in update checks
 - Fix sync browsing checkbox in bookmark manager
 
@@ -979,7 +984,7 @@ Legend:
 
 3.0.4 (2007-11-26)
 
-- Linux: Fix empty challenge text if using interactive login
+- GNU/Linux: Fix empty challenge text if using interactive login
 
 3.0.4-rc1 (2007-11-20)
 

@@ -2454,12 +2454,12 @@ irix5* | irix6* | nonstopux*)
   hardcode_into_libs=yes
   ;;
 
-# No shared lib support for Linux oldld, aout, or coff.
+# No shared lib support for GNU/Linux oldld, aout, or coff.
 linux*oldld* | linux*aout* | linux*coff*)
   dynamic_linker=no
   ;;
 
-# This must be Linux ELF.
+# This must be GNU/Linux ELF.
 linux* | k*bsd*-gnu | kopensolaris*-gnu)
   version_type=linux
   need_lib_prefix=no
@@ -3098,7 +3098,7 @@ irix5* | irix6* | nonstopux*)
   lt_cv_deplibs_check_method=pass_all
   ;;
 
-# This must be Linux ELF.
+# This must be GNU/Linux ELF.
 linux* | k*bsd*-gnu | kopensolaris*-gnu)
   lt_cv_deplibs_check_method=pass_all
   ;;
@@ -3749,7 +3749,7 @@ m4_if([$1], [CXX], [
 	  cxx*)
 	    # Compaq C++
 	    # Make sure the PIC flag is empty.  It appears that all Alpha
-	    # Linux and Compaq Tru64 Unix objects are PIC.
+	    # GNU/Linux and Compaq Tru64 Unix objects are PIC.
 	    _LT_TAGVAR(lt_prog_compiler_pic, $1)=
 	    _LT_TAGVAR(lt_prog_compiler_static, $1)='-non_shared'
 	    ;;
@@ -3804,7 +3804,7 @@ m4_if([$1], [CXX], [
 	    # Digital/Compaq C++
 	    _LT_TAGVAR(lt_prog_compiler_wl, $1)='-Wl,'
 	    # Make sure the PIC flag is empty.  It appears that all Alpha
-	    # Linux and Compaq Tru64 Unix objects are PIC.
+	    # GNU/Linux and Compaq Tru64 Unix objects are PIC.
 	    _LT_TAGVAR(lt_prog_compiler_pic, $1)=
 	    _LT_TAGVAR(lt_prog_compiler_static, $1)='-non_shared'
 	    ;;

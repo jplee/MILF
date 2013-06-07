@@ -1,8 +1,8 @@
-                               FileZilla Client
+                                     MILF
                                ----------------
 
                       Copyright (C) 2004-2013  Tim Kosse
-                         http://filezilla-project.org/
+                        https://github.com/jplee/MILF
 
 Overview
 --------
@@ -17,6 +17,7 @@ the Free Software Foundation; either version 3 of the License, or
 Features
 --------
 
+- Option to automatically upload edits, without prompt.
 - Supports FTP, FTP over SSL/TLS (FTPS) and SSH File Transfer Protocol (SFTP)
 - Cross-platform
 - IPv6 support

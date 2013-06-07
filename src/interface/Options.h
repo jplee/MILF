@@ -89,8 +89,8 @@ enum interfaceOptions
 	OPTION_DEFAULT_KIOSKMODE,
 	OPTION_DEFAULT_DISABLEUPDATECHECK,
 
-	// MILF option to bypass prompt to upload edited files
-	OPTION_EDIT_BYPASS_PROMPT,
+    // MILF option to bypass prompt to upload edited files
+    OPTION_EDIT_BYPASS_PROMPT,
 
 	// Has to be last element
 	OPTIONS_NUM

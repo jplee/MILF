@@ -286,7 +286,7 @@ bool IsIpAddress(const wxString& address)
 // RAND_MAX is different depending on platform.
 // For example on MSW, it is just 0x7fff, not even enough to cover
 // a full range of tcp ports.
-// On Linux it is identical to INT_MAX.
+// On GNU/Linux it is identical to INT_MAX.
 //
 // The following code can generate random numbers using rand() for any
 // RAND_MAX.

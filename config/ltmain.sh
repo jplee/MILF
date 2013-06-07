@@ -6260,7 +6260,7 @@ func_mode_link ()
 	none) ;;
 
 	darwin)
-	  # Like Linux, but with the current version available in
+	  # Like GNU/Linux, but with the current version available in
 	  # verstring for coding it into the library header
 	  func_arith $current - $age
 	  major=.$func_arith_result

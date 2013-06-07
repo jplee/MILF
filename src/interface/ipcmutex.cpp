@@ -40,7 +40,8 @@ CInterProcessMutex::~CInterProcessMutex()
 #else
 	m_instanceCount--;
 	// Close file only if this is the last instance. At least under
-	// Linux, closing the lock file has the affect of removing all locks.
+	// GNU/Linux, closing the lock file has the affect of removing all 
+    // locks.
 	if (!m_instanceCount && m_fd >= 0)
 		close(m_fd);
 #endif

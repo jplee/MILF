@@ -36,7 +36,7 @@ bool COptionsPageEdit::LoadPage()
 		SetRCheck(XRCID("ID_USEASSOCIATIONS"), true, failure);
 
 	SetCheckFromOption(XRCID("ID_EDIT_TRACK_LOCAL"), OPTION_EDIT_TRACK_LOCAL, failure);
-	SetCheckFromOption(XRCID("ID_EDIT_BYPASS_PROMPT"), OPTION_EDIT_BYPASS_PROMPT, failure);
+    SetCheckFromOption(XRCID("ID_EDIT_BYPASS_PROMPT"), OPTION_EDIT_BYPASS_PROMPT, failure);
 
 	if (!failure)
 		SetCtrlState();
@@ -59,7 +59,7 @@ bool COptionsPageEdit::SavePage()
 		pOptions->SetOption(OPTION_EDIT_ALWAYSDEFAULT, 0);
 
 	SetOptionFromCheck(XRCID("ID_EDIT_TRACK_LOCAL"), OPTION_EDIT_TRACK_LOCAL);
-	SetOptionFromCheck(XRCID("ID_EDIT_BYPASS_PROMPT"), OPTION_EDIT_BYPASS_PROMPT);
+    SetOptionFromCheck(XRCID("ID_EDIT_BYPASS_PROMPT"), OPTION_EDIT_BYPASS_PROMPT);
 
 	return true;
 }

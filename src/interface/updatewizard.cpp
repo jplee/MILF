@@ -135,7 +135,7 @@ CUpdateWizard::CUpdateWizard(wxWindow* pParent)
 	m_urlServer = _T("update.filezilla-project.org");
 	m_urlFile = wxString::Format(_T("/updatecheck.php?platform=%s&version=%s"), host.c_str(), version.c_str());
 #if defined(__WXMSW__) || defined(__WXMAC__)
-	// Makes not much sense to submit OS version on Linux, *BSD and the likes, too many flavours.
+	// Makes not much sense to submit OS version on GNU/Linux, *BSD and the likes, too many flavours.
 	wxString osVersion = wxString::Format(_T("&osversion=%d.%d"), wxPlatformInfo::Get().GetOSMajorVersion(), wxPlatformInfo::Get().GetOSMinorVersion());
 	m_urlFile += osVersion;
 #endif

@@ -182,9 +182,9 @@ static const t_Option options[OPTIONS_NUM] =
 	// Default/internal options
 	{ "Config Location", string, _T(""), default_only },
 	{ "Kiosk mode", number, _T("0"), default_priority },
-	{ "Disable update check", number, _T("0"), default_only },
-	// MILF option to bypass prompt to upload edited files
-	{ "Edit bypass prompt", number, _T("0"), normal }
+    { "Disable update check", number, _T("0"), default_only },
+    // MILF option to bypass prompt to upload edited files
+    { "Edit bypass prompt", number, _T("0"), normal }
 };
 
 BEGIN_EVENT_TABLE(COptions, wxEvtHandler)
