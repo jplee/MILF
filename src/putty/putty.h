@@ -77,7 +77,7 @@ typedef struct terminal_tag Terminal;
 
 #define ATTR_INVALID 0x03FFFFU
 
-/* Like GNU/Linux use the F000 page for direct to font. */
+/* Like Linux use the F000 page for direct to font. */
 #define CSET_OEMCP   0x0000F000UL      /* OEM Codepage DTF */
 #define CSET_ACP     0x0000F100UL      /* Ansi Codepage DTF */
 

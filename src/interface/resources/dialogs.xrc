@@ -369,6 +369,16 @@
                       </object>
                       <object class="sizeritem">
                         <object class="wxStaticText">
+                          <label>Signature algorithm:</label>
+                        </object>
+                      </object>
+                      <object class="sizeritem">
+                        <object class="wxStaticText" name="ID_SIGNALGO">
+                          <label/>
+                        </object>
+                      </object>
+                      <object class="sizeritem">
+                        <object class="wxStaticText">
                           <label>Fingerprint (MD5):</label>
                         </object>
                       </object>
@@ -1799,8 +1809,8 @@
                   </object>
                   <object class="sizeritem">
                     <object class="wxHyperlinkCtrl" name="ID_URL">
-                      <label>&lt;http://filezilla-project.org&gt;</label>
-                      <url>http://filezilla-project.org</url>
+                      <label>&lt;https://filezilla-project.org&gt;</label>
+                      <url>https://filezilla-project.org</url>
                     </object>
                   </object>
                   <vgap>3</vgap>

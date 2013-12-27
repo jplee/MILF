@@ -337,8 +337,6 @@ CMainFrame::CMainFrame()
 
 	m_pContextControl->CreateTab();
 
-	m_pContextControl->GetCurrentControls();
-
 	switch (message_log_position)
 	{
 	case 1:
@@ -740,7 +738,7 @@ void CMainFrame::OnMenuHandler(wxCommandEvent &event)
 	else if (event.GetId() == XRCID("ID_MENU_HELP_GETTINGHELP") ||
 			 event.GetId() == XRCID("ID_MENU_HELP_BUGREPORT"))
 	{
-		wxString url(_T("http://filezilla-project.org/support.php?type=client&mode="));
+		wxString url(_T("https://filezilla-project.org/support.php?type=client&mode="));
 		if (event.GetId() == XRCID("ID_MENU_HELP_GETTINGHELP"))
 			url += _T("help");
 		else
@@ -2505,6 +2503,25 @@ void CMainFrame::ProcessCommandLine()
 	if (!pCommandLine)
 		return;
 
+	wxString local;
+	if ((local = pCommandLine->GetOption(CCommandLine::local)) != _T(""))
+	{
+		
+		if (!wxDir::Exists(local))
+		{
+			wxString str = _("Path not found:");
+			str += _T("\n") + local;
+			wxMessageBox(str, _("Syntax error in command line"));
+			return;
+		}
+		
+		CState *pState = CContextManager::Get()->GetCurrentContext();
+		if (!pState)
+			return;
+			
+		pState->SetLocalDir(local);
+	}	
+	
 	wxString site;
 	if (pCommandLine->HasSwitch(CCommandLine::sitemanager))
 	{

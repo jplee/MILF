@@ -7,8 +7,31 @@ Legend:
 
   Platform prefixes:
     MSW: Microsoft Windows
-    *nix: Unix and Unix-like systems (e.g., GNU/Linux)
+    *nix: Unix (e.g BSD) and Unix-like systems (e.g. GNU/Linux)
     OS X: Apple Mac OS X
+
+3.7.3 (2013-08-07)
+
+! Merge further fixes from PuTTY to address CVE-2013-4206, CVE-2013-4207, CVE-2013-4208
+
+3.7.2 (2013-08-06)
+
+! Apply a fix for a security vulnerability in PuTTY as used in FileZilla to handle SFTP. See CVE-2013-4852 for reference.
+- Provided GNU/Linux binaries are now built against Debian Wheezy
+
+3.7.1.1 (2013-06-27)
+
+- Minor bump for installer changes
+
+3.7.1 (2013-06-18)
+
+- Updated translations
+
+3.7.1-rc1 (2013-06-10)
+
++ Add command-line option to specify initial local directory
+- Fix crash on OS X if connecting using FTP over TLS
+- Prevent file lists from jumping when they are not supposed to
 
 3.7.0.2 (2013-05-26)
 

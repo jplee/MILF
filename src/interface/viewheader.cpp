@@ -53,7 +53,7 @@ protected:
 	}
 #endif //__WXMSW__
 
-	DECLARE_EVENT_TABLE();
+	DECLARE_EVENT_TABLE()
 	void OnKeyDown(wxKeyEvent& event)
 	{
 		if (event.GetKeyCode() != WXK_TAB)
@@ -597,7 +597,7 @@ void CRemoteViewHeader::OnTextEnter(wxCommandEvent& event)
 		return;
 	}
 
-	if (!m_pState->m_pCommandQueue->Idle())
+	if (!m_pState->IsRemoteIdle())
 	{
 		wxBell();
 		return;
@@ -619,7 +619,7 @@ void CRemoteViewHeader::OnSelectionChanged(wxCommandEvent& event)
 		return;
 	}
 
-	if (!m_pState->m_pCommandQueue->Idle())
+	if (!m_pState->IsRemoteIdle())
 	{
 		wxBell();
 		return;

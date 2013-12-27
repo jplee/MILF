@@ -102,7 +102,7 @@ enum TransferEndReason
 	none,
 	successful,
 	timeout,
-	transfer_failure,					// Error during transfer, like lost connection. Retry automatcally
+	transfer_failure,					// Error during transfer, like lost connection. Retry automatically
 	transfer_failure_critical,			// Error during transfer like lack of diskspace. Needs user interaction
 	pre_transfer_command_failure,		// If a command fails prior to sending the transfer command
 	transfer_command_failure_immediate,	// Used if server does not send the 150 reply after the transfer command
@@ -121,16 +121,16 @@ public:
 	virtual int Connect(const CServer &server) = 0;
 	virtual int Disconnect();
 	virtual void Cancel();
-	virtual int List(CServerPath path = CServerPath(), wxString subDir = _T(""), int flags = 0) { return FZ_REPLY_NOTSUPPORTED; }
+	virtual int List(CServerPath path = CServerPath(), wxString subDir = _T(""), int flags = 0);
 	virtual int FileTransfer(const wxString localFile, const CServerPath &remotePath,
 							 const wxString &remoteFile, bool download,
-							 const CFileTransferCommand::t_transferSettings& transferSettings) { return FZ_REPLY_NOTSUPPORTED; }
-	virtual int RawCommand(const wxString& command = _T("")) { return FZ_REPLY_NOTSUPPORTED; }
-	virtual int Delete(const CServerPath& path, const std::list<wxString>& files) { return FZ_REPLY_NOTSUPPORTED; }
-	virtual int RemoveDir(const CServerPath& path = CServerPath(), const wxString& subDir = _T("")) { return FZ_REPLY_NOTSUPPORTED; }
-	virtual int Mkdir(const CServerPath& path) { return FZ_REPLY_NOTSUPPORTED; }
-	virtual int Rename(const CRenameCommand& command) { return FZ_REPLY_NOTSUPPORTED; }
-	virtual int Chmod(const CChmodCommand& command) { return FZ_REPLY_NOTSUPPORTED; }
+							 const CFileTransferCommand::t_transferSettings& transferSettings);
+	virtual int RawCommand(const wxString& command = _T(""));
+	virtual int Delete(const CServerPath& path, const std::list<wxString>& files);
+	virtual int RemoveDir(const CServerPath& path = CServerPath(), const wxString& subDir = _T(""));
+	virtual int Mkdir(const CServerPath& path);
+	virtual int Rename(const CRenameCommand& command);
+	virtual int Chmod(const CChmodCommand& command);
 	virtual bool Connected() = 0;
 
 	// If m_pCurrentOpData is zero, this function returns the current command
@@ -269,7 +269,7 @@ protected:
 
 	bool m_invalidateCurrentPath;
 
-	DECLARE_EVENT_TABLE();
+	DECLARE_EVENT_TABLE()
 	void OnTimer(wxTimerEvent& event);
 	void OnObtainLock(wxCommandEvent& event);
 };

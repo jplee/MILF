@@ -43,6 +43,8 @@ static void getstring(char **data, int *datalen, char **p, int *length)
     if (*datalen < 4)
 	return;
     *length = GET_32BIT(*data);
+    if (*length < 0)
+        return;
     *datalen -= 4;
     *data += 4;
     if (*datalen < *length)
@@ -98,7 +100,7 @@ static void *dss_newkey(char *data, int len)
     }
 #endif
 
-    if (!p || memcmp(p, "ssh-dss", 7)) {
+    if (!p || slen != 7 || memcmp(p, "ssh-dss", 7)) {
 	sfree(dss);
 	return NULL;
     }
@@ -249,8 +251,13 @@ static int dss_verifysig(void *key, char *sig, int siglen,
     }
     r = get160(&sig, &siglen);
     s = get160(&sig, &siglen);
-    if (!r || !s)
+    if (!r || !s) {
+        if (r)
+            freebn(r);
+        if (s)
+            freebn(s);
 	return 0;
+    }
 
     /*
      * Step 1. w <- s^-1 mod q.
@@ -599,6 +606,7 @@ static unsigned char *dss_sign(void *key, char *data, int datalen, int *siglen)
     s = modmul(kinv, hxr, dss->q);     /* s = k^-1 * (hash + x*r) mod q */
     freebn(hxr);
     freebn(kinv);
+    freebn(k);
     freebn(hash);
 
     /*

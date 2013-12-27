@@ -11,14 +11,14 @@
 BEGIN_EVENT_TABLE(CAboutDialog, wxDialogEx)
 EVT_BUTTON(XRCID("wxID_OK"), CAboutDialog::OnOK)
 EVT_BUTTON(XRCID("ID_COPY"), CAboutDialog::OnCopy)
-END_EVENT_TABLE();
+END_EVENT_TABLE()
 
 bool CAboutDialog::Create(wxWindow* parent)
 {
 	if (!Load(parent, _T("ID_ABOUT")))
 		return false;
 
-	XRCCTRL(*this, "ID_URL", wxHyperlinkCtrl)->SetLabel(_T("http://filezilla-project.org"));
+	XRCCTRL(*this, "ID_URL", wxHyperlinkCtrl)->SetLabel(_T("https://filezilla-project.org"));
 
 	XRCCTRL(*this, "ID_COPYRIGHT", wxStaticText)->SetLabel(_T("Copyright (C) 2004-2013  Tim Kosse"));
 

@@ -11,7 +11,7 @@
 
 BEGIN_EVENT_TABLE(CTransferSocket, wxEvtHandler)
 	EVT_IOTHREAD(wxID_ANY, CTransferSocket::OnIOThreadEvent)
-END_EVENT_TABLE();
+END_EVENT_TABLE()
 
 CTransferSocket::CTransferSocket(CFileZillaEnginePrivate *pEngine, CFtpControlSocket *pControlSocket, enum TransferMode transferMode)
 {
@@ -165,7 +165,16 @@ void CTransferSocket::OnSocketEvent(CSocketEvent &event)
 	switch (event.GetType())
 	{
 	case CSocketEvent::connection:
-		OnConnect();
+		if (event.GetError())
+		{
+			if (!m_transferEndReason)
+			{
+				m_pControlSocket->LogMessage(::Error, _("The data connection could not be established: %s"), CSocket::GetErrorDescription(event.GetError()).c_str());
+				TransferEnd(transfer_failure);
+			}
+		}
+		else
+			OnConnect();
 		break;
 	case CSocketEvent::read:
 		OnReceive();

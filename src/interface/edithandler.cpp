@@ -13,7 +13,7 @@ bool ProgramExists(const wxString& editor);
 
 class CChangedFileDialog : public wxDialogEx
 {
-	DECLARE_EVENT_TABLE();
+	DECLARE_EVENT_TABLE()
 	void OnYes(wxCommandEvent& event);
 	void OnNo(wxCommandEvent& event);
 };
@@ -664,7 +664,7 @@ checkmodifications_loopbegin:
 			wxMouseState mouseState = wxGetMouseState();
 			if (mouseState.LeftDown() || mouseState.MiddleDown() || mouseState.RightDown())
 			{
-				m_busyTimer.Start(1000, true);
+				m_busyTimer.Start(500, true);
 				insideCheckForModifications = false;
 				return;
 			}
@@ -678,12 +678,11 @@ checkmodifications_loopbegin:
 			}
 
 			bool remove;
-
-            int res;
-            if (COptions::Get()->GetOptionVal(OPTION_EDIT_BYPASS_PROMPT) == 0)
-                res = DisplayChangeNotification(CEditHandler::fileType(i), iter, remove);
-            else
-                res = wxID_YES;
+			int res;
+			if (COptions::Get()->GetOptionVal(OPTION_EDIT_BYPASS_PROMPT) == 0)
+				res = DisplayChangeNotification(CEditHandler::fileType(i), iter, remove);
+			else
+				res = wxID_YES;
 
 			if (res == -1)
 				continue;

@@ -88,9 +88,7 @@ enum interfaceOptions
 	OPTION_DEFAULT_SETTINGSDIR,
 	OPTION_DEFAULT_KIOSKMODE,
 	OPTION_DEFAULT_DISABLEUPDATECHECK,
-
-    // MILF option to bypass prompt to upload edited files
-    OPTION_EDIT_BYPASS_PROMPT,
+	OPTION_EDIT_BYPASS_PROMPT,
 
 	// Has to be last element
 	OPTIONS_NUM
@@ -162,7 +160,7 @@ protected:
 
 	wxTimer m_save_timer;
 
-	DECLARE_EVENT_TABLE();
+	DECLARE_EVENT_TABLE()
 	void OnTimer(wxTimerEvent& event);
 };
 
